@@ -1,0 +1,139 @@
+syntax = "proto3";
+
+package tradingAPI;
+
+service TradingService {
+    rpc GetAccounts (AccountRequest) returns (AccountResponse);
+    rpc GetGroups (GroupRequest) returns (GroupResponse);
+    rpc GetBalances (BalanceRequest) returns (BalanceResponse);
+    rpc GetPositions (PositionRequest) returns (PositionResponse);
+
+    rpc CreateOrder (NewOrder) returns (OrderResponse);
+    rpc GetOrders (OrderRequest) returns (OrderResponse);
+}
+
+enum Status {
+    OK = 0;
+    NOT_FOUND = 1;
+    INVALID_DATA = 2;
+    SERVER_ERROR = 3;
+}
+
+message BalanceRequest {
+    repeated string accountIds = 1;
+    repeated string names = 2;
+    repeated string exchanges = 3;
+}
+message BalanceResponse {
+    Balance balance = 1;
+    repeated Balance balances = 2;
+    Status status = 3;
+}
+
+message Balance {
+    string currency = 1;
+    string name = 2;
+    string accountId = 3;
+    int64 total = 4;
+    string exchange = 5;
+}
+
+message GroupRequest {
+
+}
+
+message GroupResponse {
+    Group group = 1;
+    repeated Group groups = 2;
+    Status status = 3;
+}
+
+message Group {
+    string id = 1;
+    string name = 2;
+    repeated string accountIds = 3;
+    repeated Account accounts = 4;
+}
+
+message AccountRequest {
+
+}
+
+message AccountResponse {
+    Account account = 1;
+    repeated Account accounts = 2;
+    Status status = 3;
+}
+
+message Account {
+    string id = 1;
+    string name = 2;
+    string exchange = 3;
+    map<string, string> credentials = 4;
+}
+
+message NewOrder {
+    string pair = 1;
+    int64 amount = 2;
+    int64 price = 3;
+    string direction = 4;
+    string type = 5;
+    string context = 6;
+    repeated string accountIds = 7;
+}
+
+message OrderRequest {
+    repeated string accountIds = 1;
+}
+
+message OrderResponse {
+    Order order = 1;
+    repeated Order orders = 2;
+    Status status = 3;
+}
+
+message Order {
+    string id = 1;
+    string externalId = 2;
+    string direction = 3;
+    string context = 4;
+    string type = 5;
+    string pair = 6;
+    int64 originalAmount = 7;
+    int64 remainingAmount = 8;
+    int64 price = 9;
+    int64 averageExecutionPrice = 10;
+    int64 openedAt = 11;
+    int64 updatedAt = 12;
+    int64 canceledAt = 13;
+    string accountId = 14;
+    string status = 15;
+    string exchange = 16;
+}
+
+message Position {
+    string id = 1;
+    string externalId = 2;
+    string accountId = 3;
+    string exchange = 4;
+    string pair = 5;
+    string status = 6;
+    int64 amount = 7;
+    int64 basePrice = 8;
+    double marginFunding = 9;
+    int64 marginFundingType = 10;
+    int64 profitLoss = 11;
+    double profitLossPercentage = 12;
+    int64 createdAt = 13;
+    int64 updatedAt = 14;
+}
+
+message PositionResponse {
+    Position position = 1;
+    repeated Position positions = 2;
+    Status status = 3;
+}
+
+message PositionRequest {
+    repeated string accountIds = 1;
+}
